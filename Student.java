@@ -9,31 +9,31 @@ import java.util.TreeSet;
 public class Student implements Comparable<Student>{
     private static int NUMBER_OF_WEEKS = 10;
 
-    private String      edxid;
-    private int[]       maxNumberOfEmotions = new int[NUMBER_OF_WEEKS];
-    private Checkin[]   selectedCheckin = new Checkin[NUMBER_OF_WEEKS];
+    private String    edxid;
+    private int[]     maxNumEmotionsCheckedInThisWeek = new int[NUMBER_OF_WEEKS];
+    private Checkin[] selectedCheckinThisWeek         = new Checkin[NUMBER_OF_WEEKS];
 
     public Student(String edxid) {
         this.edxid = edxid;
         //checkins2 = new ArrayList<TreeSet<Checkin>>();
     }
 
-    public void checkin(Checkin checkin, int week) {
+    public void doCheckin(Checkin checkin, int week) {
         if(checkin != null) {
             getCheckinVariableName(week).add(checkin);
-            if(checkin.getNumberOfEmotions() > maxNumberOfEmotions[week]) {
-                maxNumberOfEmotions[week] = checkin.getNumberOfEmotions();
+            if(checkin.getNumEmotionsCheckedin() > maxNumEmotionsCheckedInThisWeek[week]) {
+                maxNumEmotionsCheckedInThisWeek[week] = checkin.getNumEmotionsCheckedin();
             }
         }
     }
 
     public Checkin selectCheckin(int week) {
         for (Checkin c:getCheckinVariableName(week)) {
-            if (selectedCheckin[week].getNumberOfEmotions() == maxNumberOfEmotions[week]) {
-                selectedCheckin[week] = c;
+            if (selectedCheckinThisWeek[week].getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
+                selectedCheckinThisWeek[week] = c;
             }
         }
-        return selectedCheckin[week];
+        return selectedCheckinThisWeek[week];
     }
 
     @Override
