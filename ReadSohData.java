@@ -24,7 +24,7 @@ public class ReadSohData {
         String registeredUsersFile = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/registeredUsers/registeredUsers_2016F_edx_Mar112017.csv";
         BufferedReader br = null;
         String line = "";
-        String delimiter = ",";
+        registeredStudents = new TreeSet<>();
         registeredStudents = new TreeSet<>();
 
         try {
