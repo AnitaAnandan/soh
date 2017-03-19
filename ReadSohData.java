@@ -1,5 +1,9 @@
 package soh;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,23 +16,40 @@ public class ReadSohData {
 
     public static void main(String[] args) {
         registerStudents();
-        checkinStudents();
-        selectCheckin();
+        //checkinStudents();
+        //selectCheckin();
     }
 
     private static void registerStudents() {
-        // for each line in CSV, read edxIds
-        String[] edxidsFromFile = {"abc", "cde", "abc", "bcd"};
-
-        //List<Student> students = new ArrayList<Student>();
+        String registeredUsersFile = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/registeredUsers/registeredUsers_2016F_edx_Mar112017.csv";
+        BufferedReader br = null;
+        String line = "";
+        String delimiter = ",";
         registeredStudents = new TreeSet<>();
-        for (String edxid: edxidsFromFile) {
+
+        try {
+            br = new BufferedReader(new FileReader(registeredUsersFile));
+            //TODO: Skip header
+            while ((line = br.readLine()) != null) {
+                String edxid = line;
             Student s = new Student(edxid);
             registeredStudents.add(s);
         }
-        System.out.println("There are " + registeredStudents.size() + " students:");
-        System.out.println(registeredStudents);
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        System.out.println("There are " + registeredStudents.size() + " students:");
     }
 
     private static void checkinStudents() {
