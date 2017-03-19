@@ -21,5 +21,14 @@ public abstract class Emotion {
             throw new Throwable("Emotions's score " + score + " is not between 1-10");
         }
     }
+
+    public int getScore() {
+        return score;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(score);
+    }
 }
 

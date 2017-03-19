@@ -20,20 +20,44 @@ public class Student implements Comparable<Student>{
 
     public void doCheckin(Checkin checkin, int week) {
         if(checkin != null) {
+            // If two checkins have the same timestamp (which shouldn't happen),
+            // and different number of emotions checkedin
+            TreeSet<Checkin> checkins = getCheckinVariableName(week);
+            if(checkins.contains(checkin)) {
+                Checkin existing = checkins.floor(checkin); //TODO: floor is the reason the type has to be TreeSet, not Set. Alternative?
+                if(existing.getNumEmotionsCheckedin() < checkin.getNumEmotionsCheckedin()) {
+                    checkins.remove(existing);
+                    checkins.add(checkin);
+                }
+            }
+
             getCheckinVariableName(week).add(checkin);
             if(checkin.getNumEmotionsCheckedin() > maxNumEmotionsCheckedInThisWeek[week]) {
                 maxNumEmotionsCheckedInThisWeek[week] = checkin.getNumEmotionsCheckedin();
-            }
+            }/*
+            if (selectedCheckinThisWeek[week] == null) {
+                selectedCheckinThisWeek[week] = checkin;
+            } else {
+                selectCheckin(week);
+            }*/
         }
     }
 
     public Checkin selectCheckin(int week) {
+        Set<Checkin> checkins = getCheckinVariableName(week);
+
+        if(checkins == null || checkins.isEmpty()) return null;
         for (Checkin c:getCheckinVariableName(week)) {
+            //if (selectedCheckinThisWeek[week])
+            /*
             if (selectedCheckinThisWeek[week].getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
                 selectedCheckinThisWeek[week] = c;
+            }*/
+            if (c.getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
+                return selectedCheckinThisWeek[week] = c;
             }
         }
-        return selectedCheckinThisWeek[week];
+        return null;//TODO: This line should never be executed. Fix.
     }
 
     @Override
@@ -69,17 +93,17 @@ public class Student implements Comparable<Student>{
 
     // TODO: Create arraylist of set of checkins etc.
     //private List<Set<Checkin>> checkins2 = new ArrayList<Set<Checkin>>();
-    private Set<Checkin> checkinsW01 = new TreeSet<>();
-    private Set<Checkin> checkinsW02 = new TreeSet<>();
-    private Set<Checkin> checkinsW03 = new TreeSet<>();
-    private Set<Checkin> checkinsW04 = new TreeSet<>();
-    private Set<Checkin> checkinsW05 = new TreeSet<>();
-    private Set<Checkin> checkinsW06 = new TreeSet<>();
-    private Set<Checkin> checkinsW07 = new TreeSet<>();
-    private Set<Checkin> checkinsW08 = new TreeSet<>();
-    private Set<Checkin> checkinsW09 = new TreeSet<>();
-    private Set<Checkin> checkinsW10 = new TreeSet<>();
-    private Set<Checkin> getCheckinVariableName(int week) {
+    private TreeSet<Checkin> checkinsW01 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW02 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW03 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW04 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW05 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW06 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW07 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW08 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW09 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW10 = new TreeSet<>();
+    private TreeSet<Checkin> getCheckinVariableName(int week) {
         switch(week) {
             case  1: return checkinsW01;
             case  2: return checkinsW02;

@@ -1,7 +1,5 @@
 package soh;
 
-import soh.emotion.*;
-
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
@@ -35,13 +33,14 @@ public class ReadSohData {
 
     private static void checkinStudents() {
         try {
+            /*
             Anger       a  = new Anger(1);
             Sadness     s  = new Sadness(2);
             Happiness   h  = new Happiness(3);
             Curiosity   c  = new Curiosity(4);
             Joy         j  = new Joy(5);
             Anxiety     ax = new Anxiety(6);
-            /*Emotion[] emotions = new Emotion[6];
+            Emotion[] emotions = new Emotion[6];
             emotions[0] = e1;
             emotions[1] = e2;
             emotions[2] = e3;
@@ -55,11 +54,11 @@ public class ReadSohData {
                 Checkin checkin = new Checkin(date);
                 student.doCheckin(checkin, 1);
                 //checkin.setAnger(a);
-                checkin.setAnxiety(ax);
-                checkin.setSadness(s);
-                //checkin.setJoy(j);
-                checkin.setHappiness(h);
-                checkin.setCuriosity(c);
+                checkin.setAnxiety(1);
+                checkin.setSadness(2);
+                //checkin.setJoy(5);
+                checkin.setHappiness(3);
+                checkin.setCuriosity(4);
             }
         } catch (Throwable e) {
         }

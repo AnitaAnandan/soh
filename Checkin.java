@@ -32,52 +32,71 @@ public class Checkin implements Comparable<Checkin>{
         return i;
     }
 
-    public Joy getJoy() {
-        return joy;
-    }
-
     public void setJoy(int score) throws Throwable {
         this.joy = new Joy(score);
     }
 
-    public Happiness getHappiness() {
-        return happiness;
+    public void setHappiness(int score) throws Throwable {
+        this.happiness = new Happiness(score);
     }
 
-    public void setHappiness(Happiness happiness) {
-        this.happiness = happiness;
-    }
-
-    public Curiosity getCuriosity() {
-        return curiosity;
-    }
-
-    public void setCuriosity(Curiosity curiosity) {
-        this.curiosity = curiosity;
-    }
-
-    public Anger getAnger() {
-        return anger;
+    public void setCuriosity(int score) throws Throwable {
+        this.curiosity = new Curiosity(score);
     }
 
     public void setAnger(int score) throws Throwable {
         this.anger = new Anger(score);
     }
 
-    public Anxiety getAnxiety() {
-        return anxiety;
+    public void setAnxiety(int score) throws Throwable {
+        this.anxiety = new Anxiety(score);
     }
 
-    public void setAnxiety(Anxiety anxiety) {
-        this.anxiety = anxiety;
+    public void setSadness(int score) throws Throwable {
+        this.sadness = new Sadness(score);
     }
 
-    public Sadness getSadness() {
-        return sadness;
+    //TODO: Returning 0 if null. Is this correct?
+    public int getJoy() {
+        if(joy == null)
+            return 0;
+        else
+            return joy.getScore();
     }
 
-    public void setSadness(Sadness sadness) {
-        this.sadness = sadness;
+    public int getHappiness() {
+        if(happiness == null)
+            return 0;
+        else
+            return happiness.getScore();
+    }
+
+    public int getCuriosity() {
+        if(curiosity == null)
+            return 0;
+        else
+            return curiosity.getScore();
+    }
+
+    public int getAnger() {
+        if(anger == null)
+            return 0;
+        else
+            return anger.getScore();
+    }
+
+    public int getAnxiety() {
+        if(anxiety == null)
+            return 0;
+        else
+            return anxiety.getScore();
+    }
+
+    public int getSadness() {
+        if(sadness == null)
+            return 0;
+        else
+            return sadness.getScore();
     }
 
     @Override
@@ -85,6 +104,19 @@ public class Checkin implements Comparable<Checkin>{
         if (c == null) {
             return 0; //??
         }
-        return this.date.compareTo(c.date);
+        return (this.date.compareTo(c.date));
+    }
+
+    @Override
+    public String toString() {
+        return "Checkin{" +
+                "date=" + date +
+                ", joy=" + joy +
+                ", happiness=" + happiness +
+                ", curiosity=" + curiosity +
+                ", anger=" + anger +
+                ", anxiety=" + anxiety +
+                ", sadness=" + sadness +
+                '}';
     }
 }
