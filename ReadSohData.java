@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -69,7 +70,7 @@ public class ReadSohData {
             emotions[4] = e5;
             emotions[5] = e6;*/
 
-            Date date = new Date();
+            Calendar date = new GregorianCalendar();
             Student student = new Student("abc");
             if (registeredStudents.contains(student) /* && date */) {
                 Checkin checkin = new Checkin(date);
