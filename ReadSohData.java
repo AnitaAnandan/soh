@@ -83,7 +83,7 @@ public class ReadSohData {
 
     private static void CheckinForWeek(int week) {
         String file = CHECKIN_DIRECTORY_TEST + CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
-        System.out.println("Week:      " + week + "\nFile:     " + file);
+        System.out.println("Week:     " + week + "\nFile:     " + file);
         // System.out.println("---------------");
 
         BufferedReader br = null;
@@ -166,6 +166,16 @@ public class ReadSohData {
                 if (registeredStudents.contains(s)) {
                     //System.out.println(edxid + " is registered");
                     numberOfCheckinsFromRegisteredStudents++;
+
+                    Checkin checkin = new Checkin(date);
+                    checkin.setAnger(anger);
+                    checkin.setAnxiety(anxiety);
+                    checkin.setSadness(sadness);
+                    checkin.setJoy(joy);
+                    checkin.setHappiness(happiness);
+                    checkin.setCuriosity(curiosity);
+                    checkin.setCuriosity(curiosity);
+                    s.doCheckin(checkin, week);
                 } else {
                     //System.out.println(edxid + " is NOT registered");
                     numberOfCheckinsFromUnregisteredStudents++;
