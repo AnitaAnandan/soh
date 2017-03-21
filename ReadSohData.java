@@ -157,7 +157,7 @@ public class ReadSohData {
                 if (checkinRow[6] != null && Utilities.isInteger(checkinRow[6].trim()))
                     curiosity = Integer.parseInt(checkinRow[6]);
                 // System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
-                // checkinRow[7]; TODO: sc0
+                // checkinRow[7]; TODO: Add field sco
 
                 edxid = checkinRow[8];
                 //System.out.println("edxid: " + edxid);
