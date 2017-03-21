@@ -1,5 +1,7 @@
 package soh;
 
+import util.Utilities;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -70,33 +72,49 @@ public class ReadSohData {
     private static void checkinStudents() {
 
         String file = CHECKIN_DIRECTORY_TEST + CHECKIN_PREFIX + "01" + CHECKIN_POSTFIX;
-        System.out.println("Reading " + file);
+        System.out.println("File: " + file);
+        System.out.println("---------------");
+
         BufferedReader br = null;
         String line = "";
+        String[] checkinRow;
         String delimiter = ",";
+
+        String edxid;
+
+        int anger = 0;
+        int anxiety = 0;
+        int sadness = 0;
+        int joy = 0;
+        int happiness = 0;
+        int curiosity = 0;
+
+        Calendar date;
+        Date d;
+        int year;
+        int month;
+        int day;
+        int hour;
+        int min;
+
+        // TODO: Find a less sucky way to address header
         try {
-
             br = new BufferedReader(new FileReader(file));
-            String[] checkinRow = br.readLine().split(delimiter); //TODO: Skip header
+            checkinRow = br.readLine().split(delimiter);
+            for (int i = 0; i < checkinRow.length; i++) System.out.print(checkinRow[i] + "|");
+            System.out.println();
+            System.out.println("----------------");
+        } catch (Throwable e) {
+            System.out.println(e);
+        }
 
-            int edxid;
-            int anger;
-            int anxiety;
-            int sadness;
-            int joy;
-            int happiness;
-            int curiosity;
-
-            Calendar date;
-            Date d;
-            int year;
-            int month;
-            int day;
-            int hour;
-            int min;
+        try {
             for (int i = 1; (line = br.readLine()) != null; i++) {
-                System.out.println("Row: " + i);
                 checkinRow = line.split(delimiter);
+                System.out.println("Row: " + i);
+                for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
+                System.out.println();
+                System.out.println("----------------");
 
                 // TODO: This sucks
                 System.out.println(checkinRow[0]);
@@ -108,28 +126,27 @@ public class ReadSohData {
                 min = d.getMinutes();
                 date = new GregorianCalendar(year, month, day, hour, min);
                 System.out.println(checkinRow[0]);
-                //System.out.println(date);
+                System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
 
-                if (checkinRow[1] != "") anger = Integer.parseInt(checkinRow[1]);
-                if (checkinRow[2] != "") anxiety = Integer.parseInt(checkinRow[2]);
-                if (checkinRow[3] != "") sadness = Integer.parseInt(checkinRow[3]);
-                if (checkinRow[4] != "") joy = Integer.parseInt(checkinRow[4]);
-                if (checkinRow[5] != "") happiness = Integer.parseInt(checkinRow[5]);
-                if (checkinRow[6] != "") curiosity = Integer.parseInt(checkinRow[6]);
+                anger = anxiety = sadness = joy = happiness = curiosity = 0;
+                if (checkinRow[1] != null && Utilities.isInteger(checkinRow[1].trim()))
+                    anger = Integer.parseInt(checkinRow[1]);
+                if (checkinRow[2] != null && Utilities.isInteger(checkinRow[2].trim()))
+                    anxiety = Integer.parseInt(checkinRow[2]);
+                if (checkinRow[3] != null && Utilities.isInteger(checkinRow[3].trim()))
+                    sadness = Integer.parseInt(checkinRow[3]);
+                if (checkinRow[4] != null && Utilities.isInteger(checkinRow[4].trim()))
+                    joy = Integer.parseInt(checkinRow[4]);
+                if (checkinRow[5] != null && Utilities.isInteger(checkinRow[5].trim()))
+                    happiness = Integer.parseInt(checkinRow[5]);
+                if (checkinRow[6] != null && Utilities.isInteger(checkinRow[6].trim()))
+                    curiosity = Integer.parseInt(checkinRow[6]);
+                System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
                 // checkinRow[7]; TODO: sc0
-                edxid = Integer.parseInt(checkinRow[8]);
 
-                /*
-                System.out.println(checkinRow[0] + " , ");
-                System.out.println(checkinRow[1] + " , ");
-                System.out.println(checkinRow[2] + " , ");
-                System.out.println(checkinRow[3] + " , ");
-                System.out.println(checkinRow[4] + " , ");
-                System.out.println(checkinRow[5] + " , ");
-                System.out.println(checkinRow[6] + " , ");
-                System.out.println(checkinRow[7] + " , ");
-                System.out.println(checkinRow[8] + " , ");
-                */
+                edxid = checkinRow[8];
+                System.out.println("edxid: " + edxid);
+                System.out.println("----------------");
             }
 
         } catch (FileNotFoundException e) {
@@ -137,6 +154,8 @@ public class ReadSohData {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (Throwable e) {
             e.printStackTrace();
         } finally {
             if (br != null) {
