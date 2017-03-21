@@ -31,28 +31,33 @@ public class ReadSohData {
     }
 
     private static void test() {
-        //registerStudents(USERS_TEST); // 10 users
+        registerStudents(USERS_TEST); // 10 users
         checkinStudents();
         //selectCheckin();
     }
 
-    private static void registerStudents(String registeredUsersFile) {
+    private static void registerStudents(String file) {
         BufferedReader br = null;
         String line = "";
         registeredStudents = new TreeSet<>();
 
         try {
-            br = new BufferedReader(new FileReader(registeredUsersFile));
-            if ((line = br.readLine()).equals("Anonymized User ID")) {
-                //TODO: Better way to skip header
-            }
+            br = new BufferedReader(new FileReader(file));
+            System.out.println("Registering students from: " + file + ".");
+
+            // TODO: Sucky way to address header
+            br.readLine();
+        } catch (Throwable e) {
+            System.out.println(e);
+        }
+
+        try {
             while ((line = br.readLine()) != null) {
                 String edxid = line;
                 Student s = new Student(edxid);
-                System.out.println(edxid);
+                //System.out.println(edxid);
                 registeredStudents.add(s);
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -66,14 +71,20 @@ public class ReadSohData {
                 }
             }
         }
-        System.out.println("There are " + registeredStudents.size() + " students:");
+        System.out.println("Registered " + registeredStudents.size() + " students.");
+        System.out.println("---------------");
     }
 
     private static void checkinStudents() {
+        for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
+            CheckinForWeek(week);
+        }
+    }
 
-        String file = CHECKIN_DIRECTORY_TEST + CHECKIN_PREFIX + "01" + CHECKIN_POSTFIX;
-        System.out.println("File: " + file);
-        System.out.println("---------------");
+    private static void CheckinForWeek(int week) {
+        String file = CHECKIN_DIRECTORY_TEST + CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
+        System.out.println("Week:      " + week + "\nFile:     " + file);
+        // System.out.println("---------------");
 
         BufferedReader br = null;
         String line = "";
@@ -97,27 +108,31 @@ public class ReadSohData {
         int hour;
         int min;
 
-        // TODO: Find a less sucky way to address header
+        int numberOfCheckinsFromRegisteredStudents = 0;
+        int numberOfCheckinsFromUnregisteredStudents = 0;
+        int row = 0;
+
+        // TODO: Sucky way to address header
         try {
             br = new BufferedReader(new FileReader(file));
             checkinRow = br.readLine().split(delimiter);
-            for (int i = 0; i < checkinRow.length; i++) System.out.print(checkinRow[i] + "|");
-            System.out.println();
-            System.out.println("----------------");
+            // for (int i = 0; i < checkinRow.length; i++) System.out.print(checkinRow[i] + "|");
+            //System.out.println();
+            //System.out.println("----------------");
         } catch (Throwable e) {
             System.out.println(e);
         }
 
         try {
-            for (int i = 1; (line = br.readLine()) != null; i++) {
+            for (row = 1; (line = br.readLine()) != null; row++) {
                 checkinRow = line.split(delimiter);
-                System.out.println("Row: " + i);
-                for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
-                System.out.println();
-                System.out.println("----------------");
+                //System.out.println("Row: " + row);
+                //for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
+                //System.out.println();
+                //System.out.println("----------------");
 
-                // TODO: This sucks
-                System.out.println(checkinRow[0]);
+                // TODO: sucks
+                //System.out.println(checkinRow[0]);
                 d = dateFormat.parse(checkinRow[0]);
                 year = d.getYear();
                 month = d.getMonth();
@@ -125,8 +140,8 @@ public class ReadSohData {
                 hour = d.getHours();
                 min = d.getMinutes();
                 date = new GregorianCalendar(year, month, day, hour, min);
-                System.out.println(checkinRow[0]);
-                System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
+                //System.out.println(checkinRow[0]);
+                //System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
 
                 anger = anxiety = sadness = joy = happiness = curiosity = 0;
                 if (checkinRow[1] != null && Utilities.isInteger(checkinRow[1].trim()))
@@ -141,14 +156,22 @@ public class ReadSohData {
                     happiness = Integer.parseInt(checkinRow[5]);
                 if (checkinRow[6] != null && Utilities.isInteger(checkinRow[6].trim()))
                     curiosity = Integer.parseInt(checkinRow[6]);
-                System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
+                // System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
                 // checkinRow[7]; TODO: sc0
 
                 edxid = checkinRow[8];
-                System.out.println("edxid: " + edxid);
-                System.out.println("----------------");
+                //System.out.println("edxid: " + edxid);
+                //System.out.println("----------------");
+                Student s = new Student(edxid);
+                if (registeredStudents.contains(s)) {
+                    //System.out.println(edxid + " is registered");
+                    numberOfCheckinsFromRegisteredStudents++;
+                } else {
+                    //System.out.println(edxid + " is NOT registered");
+                    numberOfCheckinsFromUnregisteredStudents++;
+                }
+                //System.out.println("----------------");
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -160,13 +183,16 @@ public class ReadSohData {
         } finally {
             if (br != null) {
                 try {
+                    System.out.println("Checkins: " + (row - 1));
+                    System.out.println("   Registered Students:   " + numberOfCheckinsFromRegisteredStudents);
+                    System.out.println("   Unregistered Students: " + numberOfCheckinsFromUnregisteredStudents);
+                    System.out.println("----------------");
                     br.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-
     }
     /*
         // Skip 1st line
@@ -208,4 +234,31 @@ public class ReadSohData {
             s.selectCheckin(1);
         }
     }*/
+
+    //TODO: Sucks
+    private static String weeknumber(int i) {
+        switch (i) {
+            case 1:
+                return "01";
+            case 2:
+                return "02";
+            case 3:
+                return "03";
+            case 4:
+                return "04";
+            case 5:
+                return "05";
+            case 6:
+                return "06";
+            case 7:
+                return "07";
+            case 8:
+                return "08";
+            case 9:
+                return "09";
+            case 10:
+                return "10";
+        }
+        return "huh?";
+    }
 }

@@ -7,12 +7,23 @@ import java.util.TreeSet;
  * Created by anitaa on 3/18/17.
  */
 public class Student implements Comparable<Student>{
-    private static int NUMBER_OF_WEEKS = 10;
+    public static int NUMBER_OF_WEEKS = 10;
 
     private String    edxid;
     private int[]     maxNumEmotionsCheckedInThisWeek = new int[NUMBER_OF_WEEKS];
     private Checkin[] selectedCheckinThisWeek         = new Checkin[NUMBER_OF_WEEKS];
-
+    // TODO: Create arraylist of set of checkins etc.
+    //private List<Set<Checkin>> checkins2 = new ArrayList<Set<Checkin>>();
+    private TreeSet<Checkin> checkinsW01 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW02 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW03 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW04 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW05 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW06 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW07 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW08 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW09 = new TreeSet<>();
+    private TreeSet<Checkin> checkinsW10 = new TreeSet<>();
     public Student(String edxid) {
         this.edxid = edxid;
         //checkins2 = new ArrayList<TreeSet<Checkin>>();
@@ -75,7 +86,6 @@ public class Student implements Comparable<Student>{
         return edxid.hashCode();
     }
 
-
     @Override
     public String toString() {
         return "Student{" +
@@ -90,19 +100,6 @@ public class Student implements Comparable<Student>{
         return this.edxid.compareTo(s.edxid);
     }
 
-
-    // TODO: Create arraylist of set of checkins etc.
-    //private List<Set<Checkin>> checkins2 = new ArrayList<Set<Checkin>>();
-    private TreeSet<Checkin> checkinsW01 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW02 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW03 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW04 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW05 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW06 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW07 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW08 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW09 = new TreeSet<>();
-    private TreeSet<Checkin> checkinsW10 = new TreeSet<>();
     private TreeSet<Checkin> getCheckinVariableName(int week) {
         switch(week) {
             case  1: return checkinsW01;
