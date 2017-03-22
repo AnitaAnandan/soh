@@ -24,10 +24,6 @@ public class ReadSohData {
     private static Calendar end = new GregorianCalendar(2016, 12, 31, 23, 59, 59);
 
     public static void main(String[] args) {
-        test();
-    }
-
-    private static void test() {
         registerStudents(false); // 10 users
         checkinStudents(false);
         //selectCheckin();
@@ -45,7 +41,7 @@ public class ReadSohData {
 
         BufferedReader br = null;
         String line = "";
-        registeredStudents = new TreeSet<>();
+        registeredStudents = new TreeSet<>(); //TODO: Hashset?
 
         try {
             br = new BufferedReader(new FileReader(file));
@@ -82,14 +78,14 @@ public class ReadSohData {
     }
 
     private static void checkinStudents(boolean forReals) {
+
+        String file;
         for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
-            String file;
             if (!forReals) {
                 file = CHECKIN_DIRECTORY_TEST;
             } else {
                 file = CHECKIN_DIRECTORY_REAL;
             }
-
             file += CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
             System.out.println("Week:     " + week + "\nFile:     " + file);
             // System.out.println("---------------");
@@ -101,12 +97,7 @@ public class ReadSohData {
 
             String edxid;
 
-            int anger = 0;
-            int anxiety = 0;
-            int sadness = 0;
-            int joy = 0;
-            int happiness = 0;
-            int curiosity = 0;
+            int anger, anxiety, sadness, joy, happiness, curiosity;
 
             Calendar date;
             Date d;

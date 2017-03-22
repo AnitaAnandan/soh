@@ -99,6 +99,10 @@ public class Checkin implements Comparable<Checkin>{
         this.sadness = new Sadness(score);
     }
 
+    public Calendar getDate() {
+        return date;
+    }
+
     @Override
     public int compareTo(Checkin c) {
         if (c == null) {
@@ -110,7 +114,7 @@ public class Checkin implements Comparable<Checkin>{
     @Override
     public String toString() {
         return "Checkin{" +
-                "date=" + date +
+                "date=" + date + "\n" +
                 ", joy=" + joy +
                 ", happiness=" + happiness +
                 ", curiosity=" + curiosity +

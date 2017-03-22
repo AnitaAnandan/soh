@@ -15,7 +15,7 @@ public abstract class Emotion {
 
     public Emotion(int score) throws Throwable {
         //name = this.name;
-        if (score >= 1 && score <= 10) {
+        if (score >= 0 && score <= 10) { //TODO: Correct?
             this.score = score;
         } else {
             throw new Throwable("Emotions's score " + score + " is not between 1-10");

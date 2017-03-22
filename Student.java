@@ -37,16 +37,15 @@ public class Student implements Comparable<Student>{
         if(checkin != null) {
             // If two checkins have the same timestamp (which shouldn't happen),
             // and different number of emotions checkedin
-            TreeSet<Checkin> checkins = getCheckinVariableName(week);
-            if(checkins.contains(checkin)) {
-                Checkin existing = checkins.floor(checkin); //TODO: floor is the reason the type has to be TreeSet, not Set. Alternative?
-                if(existing.getNumEmotionsCheckedin() < checkin.getNumEmotionsCheckedin()) {
-                    checkins.remove(existing);
-                    checkins.add(checkin);
+            //TreeSet<Checkin> checkins = getCheckinForThisWeek(week);
+            if (getCheckinForThisWeek(week).contains(checkin)) {
+                if (getCheckinForThisWeek(week).floor(checkin).getNumEmotionsCheckedin() < checkin.getNumEmotionsCheckedin()) {
+                    getCheckinForThisWeek(week).remove(getCheckinForThisWeek(week).floor(checkin));
+                    getCheckinForThisWeek(week).add(checkin);
                 }
             }
 
-            getCheckinVariableName(week).add(checkin);
+            getCheckinForThisWeek(week).add(checkin);
             if(checkin.getNumEmotionsCheckedin() > maxNumEmotionsCheckedInThisWeek[week]) {
                 maxNumEmotionsCheckedInThisWeek[week] = checkin.getNumEmotionsCheckedin();
             }/*
@@ -59,10 +58,10 @@ public class Student implements Comparable<Student>{
     }
 
     public Checkin selectCheckin(int week) {
-        Set<Checkin> checkins = getCheckinVariableName(week);
+        Set<Checkin> checkins = getCheckinForThisWeek(week);
 
         if(checkins == null || checkins.isEmpty()) return null;
-        for (Checkin c:getCheckinVariableName(week)) {
+        for (Checkin c : getCheckinForThisWeek(week)) {
             //if (selectedCheckinThisWeek[week])
             /*
             if (selectedCheckinThisWeek[week].getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
@@ -104,7 +103,7 @@ public class Student implements Comparable<Student>{
         return this.edxid.compareTo(s.edxid);
     }
 
-    private TreeSet<Checkin> getCheckinVariableName(int week) {
+    private TreeSet<Checkin> getCheckinForThisWeek(int week) {
         switch(week) {
             case  1: return checkinsW01;
             case  2: return checkinsW02;
