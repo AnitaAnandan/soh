@@ -2,10 +2,7 @@ package soh;
 
 import util.Utilities;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,12 +28,21 @@ public class ReadSohData {
     }
 
     private static void test() {
-        registerStudents(USERS_TEST); // 10 users
-        checkinStudents();
+        registerStudents(false); // 10 users
+        checkinStudents(false);
         //selectCheckin();
+        generateFile();
     }
 
-    private static void registerStudents(String file) {
+    private static void registerStudents(boolean forReals) {
+
+        String file;
+        if (!forReals) {
+            file = USERS_TEST;
+        } else {
+            file = USERS_REAL;
+        }
+
         BufferedReader br = null;
         String line = "";
         registeredStudents = new TreeSet<>();
@@ -75,175 +81,184 @@ public class ReadSohData {
         System.out.println("---------------");
     }
 
-    private static void checkinStudents() {
+    private static void checkinStudents(boolean forReals) {
         for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
-            CheckinForWeek(week);
-        }
-    }
+            String file;
+            if (!forReals) {
+                file = CHECKIN_DIRECTORY_TEST;
+            } else {
+                file = CHECKIN_DIRECTORY_REAL;
+            }
 
-    private static void CheckinForWeek(int week) {
-        String file = CHECKIN_DIRECTORY_TEST + CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
-        System.out.println("Week:     " + week + "\nFile:     " + file);
-        // System.out.println("---------------");
+            file += CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
+            System.out.println("Week:     " + week + "\nFile:     " + file);
+            // System.out.println("---------------");
 
-        BufferedReader br = null;
-        String line = "";
-        String[] checkinRow;
-        String delimiter = ",";
+            BufferedReader br = null;
+            String line = "";
+            String[] checkinRow;
+            String delimiter = ",";
 
-        String edxid;
+            String edxid;
 
-        int anger = 0;
-        int anxiety = 0;
-        int sadness = 0;
-        int joy = 0;
-        int happiness = 0;
-        int curiosity = 0;
+            int anger = 0;
+            int anxiety = 0;
+            int sadness = 0;
+            int joy = 0;
+            int happiness = 0;
+            int curiosity = 0;
 
-        Calendar date;
-        Date d;
-        int year;
-        int month;
-        int day;
-        int hour;
-        int min;
+            Calendar date;
+            Date d;
+            int year;
+            int month;
+            int day;
+            int hour;
+            int min;
 
-        int numberOfCheckinsFromRegisteredStudents = 0;
-        int numberOfCheckinsFromUnregisteredStudents = 0;
-        int row = 0;
+            int numberOfCheckinsFromRegisteredStudents = 0;
+            int numberOfCheckinsFromUnregisteredStudents = 0;
+            int row = 0;
 
-        // TODO: Sucky way to address header
-        try {
-            br = new BufferedReader(new FileReader(file));
-            checkinRow = br.readLine().split(delimiter);
-            // for (int i = 0; i < checkinRow.length; i++) System.out.print(checkinRow[i] + "|");
-            //System.out.println();
-            //System.out.println("----------------");
-        } catch (Throwable e) {
-            System.out.println(e);
-        }
-
-        try {
-            for (row = 1; (line = br.readLine()) != null; row++) {
-                checkinRow = line.split(delimiter);
-                //System.out.println("Row: " + row);
-                //for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
+            // TODO: Sucky way to address header
+            try {
+                br = new BufferedReader(new FileReader(file));
+                checkinRow = br.readLine().split(delimiter);
+                // for (int i = 0; i < checkinRow.length; i++) System.out.print(checkinRow[i] + "|");
                 //System.out.println();
                 //System.out.println("----------------");
-
-                // TODO: sucks
-                //System.out.println(checkinRow[0]);
-                d = dateFormat.parse(checkinRow[0]);
-                year = d.getYear();
-                month = d.getMonth();
-                day = d.getDay();
-                hour = d.getHours();
-                min = d.getMinutes();
-                date = new GregorianCalendar(year, month, day, hour, min);
-                //System.out.println(checkinRow[0]);
-                //System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
-
-                anger = anxiety = sadness = joy = happiness = curiosity = 0;
-                if (checkinRow[1] != null && Utilities.isInteger(checkinRow[1].trim()))
-                    anger = Integer.parseInt(checkinRow[1]);
-                if (checkinRow[2] != null && Utilities.isInteger(checkinRow[2].trim()))
-                    anxiety = Integer.parseInt(checkinRow[2]);
-                if (checkinRow[3] != null && Utilities.isInteger(checkinRow[3].trim()))
-                    sadness = Integer.parseInt(checkinRow[3]);
-                if (checkinRow[4] != null && Utilities.isInteger(checkinRow[4].trim()))
-                    joy = Integer.parseInt(checkinRow[4]);
-                if (checkinRow[5] != null && Utilities.isInteger(checkinRow[5].trim()))
-                    happiness = Integer.parseInt(checkinRow[5]);
-                if (checkinRow[6] != null && Utilities.isInteger(checkinRow[6].trim()))
-                    curiosity = Integer.parseInt(checkinRow[6]);
-                // System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
-                // checkinRow[7]; TODO: Add field sco
-
-                edxid = checkinRow[8];
-                //System.out.println("edxid: " + edxid);
-                //System.out.println("----------------");
-                Student s = new Student(edxid);
-                if (registeredStudents.contains(s)) {
-                    //System.out.println(edxid + " is registered");
-                    numberOfCheckinsFromRegisteredStudents++;
-
-                    Checkin checkin = new Checkin(date);
-                    checkin.setAnger(anger);
-                    checkin.setAnxiety(anxiety);
-                    checkin.setSadness(sadness);
-                    checkin.setJoy(joy);
-                    checkin.setHappiness(happiness);
-                    checkin.setCuriosity(curiosity);
-                    checkin.setCuriosity(curiosity);
-                    s.doCheckin(checkin, week);
-                } else {
-                    //System.out.println(edxid + " is NOT registered");
-                    numberOfCheckinsFromUnregisteredStudents++;
-                }
-                //System.out.println("----------------");
+            } catch (Throwable e) {
+                System.out.println(e);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+            try {
+                for (row = 1; (line = br.readLine()) != null; row++) {
+                    checkinRow = line.split(delimiter);
+                    //System.out.println("Row: " + row);
+                    //for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
+                    //System.out.println();
+                    //System.out.println("----------------");
+
+                    // TODO: sucks
+                    //System.out.println(checkinRow[0]);
+                    d = dateFormat.parse(checkinRow[0]);
+                    year = d.getYear();
+                    month = d.getMonth();
+                    day = d.getDay();
+                    hour = d.getHours();
+                    min = d.getMinutes();
+                    date = new GregorianCalendar(year, month, day, hour, min);
+                    //System.out.println(checkinRow[0]);
+                    //System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
+
+                    anger = anxiety = sadness = joy = happiness = curiosity = 0;
+                    if (checkinRow[1] != null && Utilities.isInteger(checkinRow[1].trim()))
+                        anger = Integer.parseInt(checkinRow[1]);
+                    if (checkinRow[2] != null && Utilities.isInteger(checkinRow[2].trim()))
+                        anxiety = Integer.parseInt(checkinRow[2]);
+                    if (checkinRow[3] != null && Utilities.isInteger(checkinRow[3].trim()))
+                        sadness = Integer.parseInt(checkinRow[3]);
+                    if (checkinRow[4] != null && Utilities.isInteger(checkinRow[4].trim()))
+                        joy = Integer.parseInt(checkinRow[4]);
+                    if (checkinRow[5] != null && Utilities.isInteger(checkinRow[5].trim()))
+                        happiness = Integer.parseInt(checkinRow[5]);
+                    if (checkinRow[6] != null && Utilities.isInteger(checkinRow[6].trim()))
+                        curiosity = Integer.parseInt(checkinRow[6]);
+                    // System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
+                    // checkinRow[7]; TODO: Add field sco
+
+                    edxid = checkinRow[8];
+                    //System.out.println("edxid: " + edxid);
+                    //System.out.println("----------------");
+                    Student s = new Student(edxid);
+                    if (registeredStudents.contains(s)) {
+                        //System.out.println(edxid + " is registered");
+                        numberOfCheckinsFromRegisteredStudents++;
+
+                        Checkin checkin = new Checkin(date);
+                        checkin.setAnger(anger);
+                        checkin.setAnxiety(anxiety);
+                        checkin.setSadness(sadness);
+                        checkin.setJoy(joy);
+                        checkin.setHappiness(happiness);
+                        checkin.setCuriosity(curiosity);
+                        checkin.setCuriosity(curiosity);
+                        s.doCheckin(checkin, week);
+                    } else {
+                        //System.out.println(edxid + " is NOT registered");
+                        numberOfCheckinsFromUnregisteredStudents++;
+                    }
+                    //System.out.println("----------------");
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            } finally {
+                if (br != null) {
+                    try {
+                        System.out.println("Checkins: " + (row - 1));
+                        System.out.println("   Registered Students:   " + numberOfCheckinsFromRegisteredStudents);
+                        System.out.println("   Unregistered Students: " + numberOfCheckinsFromUnregisteredStudents);
+                        System.out.println("----------------");
+                        br.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    private static void selectCheckin() {
+        Iterator i = registeredStudents.iterator();
+        while (i.hasNext()) {
+            Student s = (Student) i.next();
+            for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
+                s.selectCheckin(week);
+            }
+        }
+    }
+
+    private static void generateFile() {
+        String FILE_HEADER = "edxid,w1_date,w1_anger,w1_anxiety,w1_sadness,w1_joy,w1_happiness,w1_curiosity";
+        String FILE_NAME = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/something.csv";
+        System.out.println("Output file: " + FILE_NAME);
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(FILE_NAME);
+            fileWriter.append(FILE_HEADER + "\n");
+
+            Iterator i = registeredStudents.iterator();
+            while (i.hasNext()) {
+                Student s = (Student) i.next();
+                fileWriter.append(s.getEdxid() + ",");
+                for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
+                    Checkin c = s.selectCheckin(week);
+                    fileWriter.append(c.getAnger() + ",");
+                    fileWriter.append(c.getAnxiety() + ",");
+                    fileWriter.append(c.getSadness() + ",");
+                    fileWriter.append(c.getJoy() + ",");
+                    fileWriter.append(c.getHappiness() + ",");
+                    fileWriter.append(c.getCuriosity() + ",");
+                }
+            }
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
-            if (br != null) {
-                try {
-                    System.out.println("Checkins: " + (row - 1));
-                    System.out.println("   Registered Students:   " + numberOfCheckinsFromRegisteredStudents);
-                    System.out.println("   Unregistered Students: " + numberOfCheckinsFromUnregisteredStudents);
-                    System.out.println("----------------");
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-    /*
-        // Skip 1st line
-        try {
-
-
-            int unregisteredStudentsWhoCheckedIn = 0;
-            int outsideDateRange = 0;
-
-            Student student = new Student("abc");
-            if (!registeredStudents.contains(student)) {
-                unregisteredStudentsWhoCheckedIn++;
-                // TODO: break?
-            }
-            if (date.before(start) || date.after(end)) {
-                outsideDateRange++;
-            }
             try {
-                Checkin checkin = new Checkin(date);
-                checkin.setAnger(anger);
-                checkin.setAnxiety(anxiety);
-                checkin.setSadness(sadness);
-                checkin.setJoy(joy);
-                checkin.setHappiness(happiness);
-                checkin.setCuriosity(curiosity);
-                student.doCheckin(checkin, 1);
-            } catch (Throwable e) {
-            } finally {
-                // TODO
-            }
-        } finally {
-            // TODO
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (Throwable e2) {
+                e2.printStackTrace();
         }
     }
-
-
-        private static void selectCheckin() {
-        for (Student s:registeredStudents) {
-            s.selectCheckin(1);
-        }
-    }*/
+    }
 
     //TODO: Sucks
     private static String weeknumber(int i) {

@@ -29,6 +29,10 @@ public class Student implements Comparable<Student>{
         //checkins2 = new ArrayList<TreeSet<Checkin>>();
     }
 
+    public String getEdxid() {
+        return edxid;
+    }
+
     public void doCheckin(Checkin checkin, int week) {
         if(checkin != null) {
             // If two checkins have the same timestamp (which shouldn't happen),
