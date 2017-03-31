@@ -87,7 +87,7 @@ public class ReadSohData {
             } else {
                 file = CHECKIN_DIRECTORY_REAL;
             }
-            file += CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
+            file += CHECKIN_PREFIX + weeknumber(week + 1) + CHECKIN_POSTFIX;
             System.out.println("Week:     " + (week + 1) + "\nFile:     " + file);
             // System.out.println("---------------");
 
@@ -248,7 +248,7 @@ public class ReadSohData {
             while (i.hasNext()) {
                 Student s = (Student) i.next();
                 fileWriter.append(s.getEdxid() + ",");
-                for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
+                for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
                     Checkin c = s.selectCheckin(week);
                     if (c == null) {
                         c = new Checkin(defaultDate); //TODO Set this to a true defualt
