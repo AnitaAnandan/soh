@@ -242,12 +242,12 @@ public class ReadSohData {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(FILE_NAME);
-            fileWriter.append(FILE_HEADER + "\n");
+            fileWriter.append(FILE_HEADER);
 
             Iterator i = registeredStudents.iterator();
             while (i.hasNext()) {
                 Student s = (Student) i.next();
-                fileWriter.append(s.getEdxid() + ",");
+                fileWriter.append("\n" + s.getEdxid() + ",");
                 for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
                     Checkin c = s.selectCheckin(week);
                     if (c == null) {
