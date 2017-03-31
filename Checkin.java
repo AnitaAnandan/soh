@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. Please acknowledge. Feedback is much appreciated.
+ * Copyright (c) 2017. No guarantee. Feel free to reuse. Feedback is much appreciated.
  */
 
 package soh;
