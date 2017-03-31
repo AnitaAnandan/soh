@@ -105,7 +105,7 @@ public class Student implements Comparable<Student>{
     }
 
     private TreeSet<Checkin> getCheckinForThisWeek(int week) {
-        switch(week) {
+        switch (week + 1) {
             case  1: return checkinsW01;
             case  2: return checkinsW02;
             case  3: return checkinsW03;
