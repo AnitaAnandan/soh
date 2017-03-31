@@ -23,12 +23,12 @@ public class Checkin implements Comparable<Checkin>{
 
     public int getNumEmotionsCheckedin() {
         int i = 0;
-        if (joy       != null) i++;
-        if (happiness != null) i++;
-        if (curiosity != null) i++;
-        if (anger     != null) i++;
-        if (anxiety   != null) i++;
-        if (sadness   != null) i++;
+        if (joy != null && joy.getScore() != 0) i++;
+        if (happiness != null && happiness.getScore() != 0) i++;
+        if (curiosity != null && curiosity.getScore() != 0) i++;
+        if (anger != null && anger.getScore() != 0) i++;
+        if (anxiety != null && anxiety.getScore() != 0) i++;
+        if (sadness != null && sadness.getScore() != 0) i++;
         return i;
     }
 
@@ -101,7 +101,7 @@ public class Checkin implements Comparable<Checkin>{
 
     public Calendar getDate() {
         return date;
-    }
+    } //TODO: Return a nicely formatted date
 
     @Override
     public int compareTo(Checkin c) {

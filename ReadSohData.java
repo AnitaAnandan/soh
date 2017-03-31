@@ -22,6 +22,7 @@ public class ReadSohData {
     private static DateFormat dateFormat = new SimpleDateFormat("mm/dd/yy hh:mm"); // 1/4/16 22:35 //TODO: dateFormat.setLenient(false);?
     private static Calendar start = new GregorianCalendar(2016, 8, 1, 0, 0, 0);
     private static Calendar end = new GregorianCalendar(2016, 12, 31, 23, 59, 59);
+    private static Calendar defaultDate = new GregorianCalendar(2016, 12, 31, 23, 59, 59);
 
     public static void main(String[] args) {
         registerStudents(false); // 10 users
@@ -30,7 +31,7 @@ public class ReadSohData {
         generateFile();
     }
 
-    private static void registerStudents(boolean forReals) {
+    static void registerStudents(boolean forReals) {
 
         String file;
         if (!forReals) {
@@ -41,7 +42,7 @@ public class ReadSohData {
 
         BufferedReader br = null;
         String line = "";
-        registeredStudents = new TreeSet<>(); //TODO: Hashset?
+        registeredStudents = new HashSet<>(); //TODO: Hashset?
 
         try {
             br = new BufferedReader(new FileReader(file));
@@ -80,14 +81,14 @@ public class ReadSohData {
     private static void checkinStudents(boolean forReals) {
 
         String file;
-        for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
+        for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
             if (!forReals) {
                 file = CHECKIN_DIRECTORY_TEST;
             } else {
                 file = CHECKIN_DIRECTORY_REAL;
             }
             file += CHECKIN_PREFIX + weeknumber(week) + CHECKIN_POSTFIX;
-            System.out.println("Week:     " + week + "\nFile:     " + file);
+            System.out.println("Week:     " + (week + 1) + "\nFile:     " + file);
             // System.out.println("---------------");
 
             BufferedReader br = null;
@@ -173,8 +174,15 @@ public class ReadSohData {
                         checkin.setJoy(joy);
                         checkin.setHappiness(happiness);
                         checkin.setCuriosity(curiosity);
-                        checkin.setCuriosity(curiosity);
-                        s.doCheckin(checkin, week);
+
+                        //TODO Oh the humanity
+                        Iterator i = registeredStudents.iterator();
+                        while (i.hasNext()) {
+                            Student ss = (Student) i.next();
+                            if (ss.equals(s)) {
+                                ss.doCheckin(checkin, week);
+                            }
+                        }
                     } else {
                         //System.out.println(edxid + " is NOT registered");
                         numberOfCheckinsFromUnregisteredStudents++;
@@ -216,7 +224,18 @@ public class ReadSohData {
     }
 
     private static void generateFile() {
-        String FILE_HEADER = "edxid,w1_date,w1_anger,w1_anxiety,w1_sadness,w1_joy,w1_happiness,w1_curiosity";
+        String FILE_HEADER = "edxid" + ","
+                + "w01_anger,w01_anxiety,w01_sadness,w01_joy,w01_happiness,w01_curiosity" + ","
+                + "w02_anger,w02_anxiety,w02_sadness,w02_joy,w02_happiness,w02_curiosity" + ","
+                + "w03_anger,w03_anxiety,w03_sadness,w03_joy,w03_happiness,w03_curiosity" + ","
+                + "w04_anger,w04_anxiety,w04_sadness,w03_joy,w04_happiness,w04_curiosity" + ","
+                + "w05_anger,w05_anxiety,w05_sadness,w03_joy,w05_happiness,w05_curiosity" + ","
+                + "w06_anger,w06_anxiety,w06_sadness,w03_joy,w06_happiness,w06_curiosity" + ","
+                + "w07_anger,w07_anxiety,w07_sadness,w03_joy,w07_happiness,w07_curiosity" + ","
+                + "w08_anger,w08_anxiety,w08_sadness,w03_joy,w08_happiness,w08_curiosity" + ","
+                + "w09_anger,w09_anxiety,w09_sadness,w03_joy,w09_happiness,w09_curiosity" + ","
+                + "w10_anger,w10_anxiety,w10_sadness,w10_joy,w10_happiness,w10_curiosity";
+
         String FILE_NAME = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/something.csv";
         System.out.println("Output file: " + FILE_NAME);
 
@@ -231,6 +250,15 @@ public class ReadSohData {
                 fileWriter.append(s.getEdxid() + ",");
                 for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
                     Checkin c = s.selectCheckin(week);
+                    if (c == null) {
+                        c = new Checkin(defaultDate); //TODO Set this to a true defualt
+                        c.setAnger(0);
+                        c.setAnxiety(0);
+                        c.setSadness(0);
+                        c.setJoy(0);
+                        c.setHappiness(0);
+                        c.setCuriosity(0);
+                    }
                     fileWriter.append(c.getAnger() + ",");
                     fileWriter.append(c.getAnxiety() + ",");
                     fileWriter.append(c.getSadness() + ",");

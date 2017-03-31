@@ -60,7 +60,7 @@ public class Student implements Comparable<Student>{
     public Checkin selectCheckin(int week) {
         Set<Checkin> checkins = getCheckinForThisWeek(week);
 
-        if(checkins == null || checkins.isEmpty()) return null;
+        if (checkins == null || checkins.isEmpty()) return null; //return a 0 checkin instead
         for (Checkin c : getCheckinForThisWeek(week)) {
             //if (selectedCheckinThisWeek[week])
             /*
@@ -68,7 +68,8 @@ public class Student implements Comparable<Student>{
                 selectedCheckinThisWeek[week] = c;
             }*/
             if (c.getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
-                return selectedCheckinThisWeek[week] = c;
+                selectedCheckinThisWeek[week] = c;
+                return selectedCheckinThisWeek[week];
             }
         }
         return null;//TODO: This line should never be executed. Fix.

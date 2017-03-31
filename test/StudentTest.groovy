@@ -78,6 +78,23 @@ class StudentTest extends GroovyTestCase {
         System.out.print(s.selectCheckin(1)) // Apr
     }
 
+    void testSelectCheckin_RegisteredStudents() {
+        Student s = new Student("abc")
+        Checkin c2 = new Checkin(aug) // Apr
+        c2.setAnger(1)
+        c2.setJoy(3)
+        c2.setHappiness(3)
+        s.doCheckin(c2, 1)
+
+        Checkin c1 = new Checkin(dec) // May
+        c1.setAnger(1)
+        c1.setJoy(5)
+        c1.setAnxiety(6)
+        s.doCheckin(c1, 1)
+
+        System.out.print(s.selectCheckin(1)) // Apr
+    }
+
     void testSelectCheckin3() {
         Student s = new Student("abc")
         Checkin c3 = new Checkin(aug) // Apr
