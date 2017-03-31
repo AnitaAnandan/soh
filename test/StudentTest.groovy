@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. Please acknowledge. Feedback is much appreciated.
+ */
+
 package soh.test
 
 import soh.Checkin

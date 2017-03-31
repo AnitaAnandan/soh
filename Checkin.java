@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. Please acknowledge. Feedback is much appreciated.
+ */
+
 package soh;
 
 import soh.emotion.*;
@@ -32,7 +36,6 @@ public class Checkin implements Comparable<Checkin>{
         return i;
     }
 
-    //TODO: Returning 0 if null. Is this correct?
     public int getJoy() {
         if(joy == null)
             return 0;

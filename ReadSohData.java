@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. Please acknowledge. Feedback is much appreciated.
+ */
+
 package soh;
 
 import util.Utilities;
@@ -275,8 +279,8 @@ public class ReadSohData {
                 fileWriter.close();
             } catch (Throwable e2) {
                 e2.printStackTrace();
+            }
         }
-    }
     }
 
     //TODO: Sucks

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017. Please acknowledge. Feedback is much appreciated.
+ */
+
 package soh;
 
 import java.util.Set;
@@ -24,6 +28,7 @@ public class Student implements Comparable<Student>{
     private TreeSet<Checkin> checkinsW08 = new TreeSet<>();
     private TreeSet<Checkin> checkinsW09 = new TreeSet<>();
     private TreeSet<Checkin> checkinsW10 = new TreeSet<>();
+
     public Student(String edxid) {
         this.edxid = edxid;
         //checkins2 = new ArrayList<TreeSet<Checkin>>();
