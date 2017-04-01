@@ -29,8 +29,8 @@ public class ReadSohData {
     private static Calendar defaultDate = new GregorianCalendar(2016, 12, 31, 23, 59, 59);
 
     public static void main(String[] args) {
-        registerStudents(false); // 10 users
-        checkinStudents(false);
+        registerStudents(true);
+        checkinStudents(true);
         //selectCheckin();
         generateFile();
     }
@@ -114,6 +114,7 @@ public class ReadSohData {
 
             int numberOfCheckinsFromRegisteredStudents = 0;
             int numberOfCheckinsFromUnregisteredStudents = 0;
+            int numberOfNoEdxIds = 0;
             int row = 0;
 
             // TODO: Sucky way to address header
@@ -130,6 +131,13 @@ public class ReadSohData {
             try {
                 for (row = 1; (line = br.readLine()) != null; row++) {
                     checkinRow = line.split(delimiter);
+
+                    if (checkinRow.length < 9) {
+                        numberOfNoEdxIds++;
+                        continue;
+                    }
+
+
                     //System.out.println("Row: " + row);
                     //for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
                     //System.out.println();
@@ -217,6 +225,7 @@ public class ReadSohData {
         }
     }
 
+    /*
     private static void selectCheckin() {
         Iterator i = registeredStudents.iterator();
         while (i.hasNext()) {
@@ -225,7 +234,7 @@ public class ReadSohData {
                 s.selectCheckin(week);
             }
         }
-    }
+    }*/
 
     private static void generateFile() {
         String FILE_HEADER = "edxid" + ","
