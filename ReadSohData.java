@@ -17,16 +17,17 @@ import java.util.*;
  */
 public class ReadSohData {
     public static Set<Student> registeredStudents;
-    private static String USERS_TEST = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/registeredUsers/test/registeredUsers_2016F_edx_Mar112017.csv";
-    private static String USERS_REAL = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/registeredUsers/registeredUsers_2016F_edx_Mar112017.csv";
-    private static String CHECKIN_DIRECTORY_TEST = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/checkin/test/";
-    private static String CHECKIN_DIRECTORY_REAL = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/checkin/";
+    private static String USERS_TEST = "/Users/anitaa/Documents/happiness/ScienceOfHappiness/data/registeredUsers/test/registeredUsers_2016F_edx_Mar112017.csv";
+    private static String USERS_REAL = "/Users/anitaa/Documents/happiness/ScienceOfHappiness/data/registeredUsers/registeredUsers_2016F_edx_Mar112017.csv";
+    private static String CHECKIN_DIRECTORY_TEST = "/Users/anitaa/Documents/happiness/ScienceOfHappiness/data/checkin/test/";
+    private static String CHECKIN_DIRECTORY_REAL = "/Users/anitaa/Documents/happiness/ScienceOfHappiness/data/checkin/";
     private static String CHECKIN_PREFIX = "checkin_week";
     private static String CHECKIN_POSTFIX = "_qualtrics_Mar112017.csv";
     private static DateFormat dateFormat = new SimpleDateFormat("mm/dd/yy hh:mm"); // 1/4/16 22:35 //TODO: dateFormat.setLenient(false);?
     private static Calendar start = new GregorianCalendar(2016, 8, 1, 0, 0, 0);
     private static Calendar end = new GregorianCalendar(2016, 12, 31, 23, 59, 59);
     private static Calendar defaultDate = new GregorianCalendar(2016, 12, 31, 23, 59, 59);
+    private static int MIN_SELECTED_CHECKINS_PER_STUDENT = 1;
 
     public static void main(String[] args) {
         registerStudents(true);
@@ -102,7 +103,7 @@ public class ReadSohData {
 
             String edxid;
 
-            int anger, anxiety, sadness, joy, happiness, curiosity;
+            int anger, anxiety, sadness, joy, friendliness, curiosity;
 
             Calendar date;
             Date d;
@@ -137,7 +138,6 @@ public class ReadSohData {
                         continue;
                     }
 
-
                     //System.out.println("Row: " + row);
                     //for (int k = 0; k < checkinRow.length; k++) System.out.print(checkinRow[k] + "|");
                     //System.out.println();
@@ -155,20 +155,20 @@ public class ReadSohData {
                     //System.out.println(checkinRow[0]);
                     //System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
 
-                    anger = anxiety = sadness = joy = happiness = curiosity = 0;
+                    anger = anxiety = sadness = joy = friendliness = curiosity = 0;
                     if (checkinRow[1] != null && Utilities.isInteger(checkinRow[1].trim()))
-                        anger = Integer.parseInt(checkinRow[1]);
+                        joy = Integer.parseInt(checkinRow[1]);
                     if (checkinRow[2] != null && Utilities.isInteger(checkinRow[2].trim()))
-                        anxiety = Integer.parseInt(checkinRow[2]);
+                        sadness = Integer.parseInt(checkinRow[2]);
                     if (checkinRow[3] != null && Utilities.isInteger(checkinRow[3].trim()))
-                        sadness = Integer.parseInt(checkinRow[3]);
+                        friendliness = Integer.parseInt(checkinRow[3]);
                     if (checkinRow[4] != null && Utilities.isInteger(checkinRow[4].trim()))
-                        joy = Integer.parseInt(checkinRow[4]);
+                        anger = Integer.parseInt(checkinRow[4]);
                     if (checkinRow[5] != null && Utilities.isInteger(checkinRow[5].trim()))
-                        happiness = Integer.parseInt(checkinRow[5]);
+                        anxiety = Integer.parseInt(checkinRow[5]);
                     if (checkinRow[6] != null && Utilities.isInteger(checkinRow[6].trim()))
                         curiosity = Integer.parseInt(checkinRow[6]);
-                    // System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + happiness + " " + curiosity);
+                    // System.out.println("Emotions: " + anger + " " + anxiety + " " + sadness + " " + joy + " " + friendliness + " " + curiosity);
                     // checkinRow[7]; TODO: Add field sco
 
                     edxid = checkinRow[8];
@@ -184,7 +184,7 @@ public class ReadSohData {
                         checkin.setAnxiety(anxiety);
                         checkin.setSadness(sadness);
                         checkin.setJoy(joy);
-                        checkin.setHappiness(happiness);
+                        checkin.setFriendliness(friendliness);
                         checkin.setCuriosity(curiosity);
 
                         //TODO Oh the humanity
@@ -238,18 +238,18 @@ public class ReadSohData {
 
     private static void generateFile() {
         String FILE_HEADER = "edxid" + ","
-                + "w01_anger,w01_anxiety,w01_sadness,w01_joy,w01_happiness,w01_curiosity" + ","
-                + "w02_anger,w02_anxiety,w02_sadness,w02_joy,w02_happiness,w02_curiosity" + ","
-                + "w03_anger,w03_anxiety,w03_sadness,w03_joy,w03_happiness,w03_curiosity" + ","
-                + "w04_anger,w04_anxiety,w04_sadness,w03_joy,w04_happiness,w04_curiosity" + ","
-                + "w05_anger,w05_anxiety,w05_sadness,w03_joy,w05_happiness,w05_curiosity" + ","
-                + "w06_anger,w06_anxiety,w06_sadness,w03_joy,w06_happiness,w06_curiosity" + ","
-                + "w07_anger,w07_anxiety,w07_sadness,w03_joy,w07_happiness,w07_curiosity" + ","
-                + "w08_anger,w08_anxiety,w08_sadness,w03_joy,w08_happiness,w08_curiosity" + ","
-                + "w09_anger,w09_anxiety,w09_sadness,w03_joy,w09_happiness,w09_curiosity" + ","
-                + "w10_anger,w10_anxiety,w10_sadness,w10_joy,w10_happiness,w10_curiosity";
+                + "w01_anger,w01_anxiety,w01_sadness,w01_joy,w01_friendliness,w01_curiosity" + ","
+                + "w02_anger,w02_anxiety,w02_sadness,w02_joy,w02_friendliness,w02_curiosity" + ","
+                + "w03_anger,w03_anxiety,w03_sadness,w03_joy,w03_friendliness,w03_curiosity" + ","
+                + "w04_anger,w04_anxiety,w04_sadness,w03_joy,w04_friendliness,w04_curiosity" + ","
+                + "w05_anger,w05_anxiety,w05_sadness,w03_joy,w05_friendliness,w05_curiosity" + ","
+                + "w06_anger,w06_anxiety,w06_sadness,w03_joy,w06_friendliness,w06_curiosity" + ","
+                + "w07_anger,w07_anxiety,w07_sadness,w03_joy,w07_friendliness,w07_curiosity" + ","
+                + "w08_anger,w08_anxiety,w08_sadness,w03_joy,w08_friendliness,w08_curiosity" + ","
+                + "w09_anger,w09_anxiety,w09_sadness,w03_joy,w09_friendliness,w09_curiosity" + ","
+                + "w10_anger,w10_anxiety,w10_sadness,w10_joy,w10_friendliness,w10_curiosity";
 
-        String FILE_NAME = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/something.csv";
+        String FILE_NAME = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/emotions.csv";
         System.out.println("Output file: " + FILE_NAME);
 
         FileWriter fileWriter = null;
@@ -257,27 +257,51 @@ public class ReadSohData {
             fileWriter = new FileWriter(FILE_NAME);
             fileWriter.append(FILE_HEADER);
 
+            Checkin[] checkinForStudent;
+            int emptyCheckins = 0;
             Iterator i = registeredStudents.iterator();
             while (i.hasNext()) {
                 Student s = (Student) i.next();
-                fileWriter.append("\n" + s.getEdxid() + ",");
+                checkinForStudent = new Checkin[Student.NUMBER_OF_WEEKS];
                 for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
-                    Checkin c = s.selectCheckin(week);
+                    checkinForStudent[week] = s.selectCheckin(week);
+                }
+                    /*
                     if (c == null) {
                         c = new Checkin(defaultDate); //TODO Set this to a true defualt
                         c.setAnger(0);
                         c.setAnxiety(0);
                         c.setSadness(0);
                         c.setJoy(0);
-                        c.setHappiness(0);
+                        c.setfriendliness(0);
                         c.setCuriosity(0);
+                    }*/
+                emptyCheckins = 0;
+                for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
+                    if (checkinForStudent[week] == null || checkinForStudent[week].getNumEmotionsCheckedin() == 0)
+                        emptyCheckins++;
+                }
+                //System.out.println(s.getEdxid() + " " + emptyCheckins);
+                if (emptyCheckins != 10) { //MIN_SELECTED_CHECKINS_PER_STUDENT
+                    fileWriter.append("\n" + s.getEdxid() + ",");
+                    for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
+                        if (checkinForStudent[week] == null) {
+                            checkinForStudent[week] = new Checkin(defaultDate); //TODO Set this to a true defualt)
+                            checkinForStudent[week].setAnger(0);
+                            checkinForStudent[week].setAnxiety(0);
+                            checkinForStudent[week].setSadness(0);
+                            checkinForStudent[week].setJoy(0);
+                            checkinForStudent[week].setFriendliness(0);
+                            checkinForStudent[week].setCuriosity(0);
+                        }
+
+                        fileWriter.append(checkinForStudent[week].getAnger() + ",");
+                        fileWriter.append(checkinForStudent[week].getAnxiety() + ",");
+                        fileWriter.append(checkinForStudent[week].getSadness() + ",");
+                        fileWriter.append(checkinForStudent[week].getJoy() + ",");
+                        fileWriter.append(checkinForStudent[week].getFriendliness() + ",");
+                        fileWriter.append(checkinForStudent[week].getCuriosity() + ",");
                     }
-                    fileWriter.append(c.getAnger() + ",");
-                    fileWriter.append(c.getAnxiety() + ",");
-                    fileWriter.append(c.getSadness() + ",");
-                    fileWriter.append(c.getJoy() + ",");
-                    fileWriter.append(c.getHappiness() + ",");
-                    fileWriter.append(c.getCuriosity() + ",");
                 }
             }
         } catch (Throwable e) {

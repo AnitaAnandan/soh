@@ -15,7 +15,7 @@ public class Checkin implements Comparable<Checkin>{
     private Calendar date;
 
     private Joy         joy;
-    private Happiness   happiness;
+    private Friendliness friendliness;
     private Curiosity   curiosity;
     private Anger       anger;
     private Anxiety     anxiety;
@@ -28,7 +28,7 @@ public class Checkin implements Comparable<Checkin>{
     public int getNumEmotionsCheckedin() {
         int i = 0;
         if (joy != null && joy.getScore() != 0) i++;
-        if (happiness != null && happiness.getScore() != 0) i++;
+        if (friendliness != null && friendliness.getScore() != 0) i++;
         if (curiosity != null && curiosity.getScore() != 0) i++;
         if (anger != null && anger.getScore() != 0) i++;
         if (anxiety != null && anxiety.getScore() != 0) i++;
@@ -47,15 +47,15 @@ public class Checkin implements Comparable<Checkin>{
         this.joy = new Joy(score);
     }
 
-    public int getHappiness() {
-        if(happiness == null)
+    public int getFriendliness() {
+        if (friendliness == null)
             return 0;
         else
-            return happiness.getScore();
+            return friendliness.getScore();
     }
 
-    public void setHappiness(int score) throws Throwable {
-        this.happiness = new Happiness(score);
+    public void setFriendliness(int score) throws Throwable {
+        this.friendliness = new Friendliness(score);
     }
 
     public int getCuriosity() {
@@ -119,7 +119,7 @@ public class Checkin implements Comparable<Checkin>{
         return "Checkin{" +
                 "date=" + date + "\n" +
                 ", joy=" + joy +
-                ", happiness=" + happiness +
+                ", friendliness=" + friendliness +
                 ", curiosity=" + curiosity +
                 ", anger=" + anger +
                 ", anxiety=" + anxiety +
