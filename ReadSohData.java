@@ -192,7 +192,7 @@ public class ReadSohData {
                         while (i.hasNext()) {
                             Student ss = (Student) i.next();
                             if (ss.equals(s)) {
-                                ss.doCheckin(checkin, week);
+                                ss.doCheckin(week, checkin);
                             }
                         }
                     } else {

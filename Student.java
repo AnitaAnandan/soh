@@ -38,7 +38,7 @@ public class Student implements Comparable<Student>{
         return edxid;
     }
 
-    public void doCheckin(Checkin checkin, int week) {
+    public void doCheckin(int week, Checkin checkin) {
         if(checkin != null) {
             // If two checkins have the same timestamp (which shouldn't happen),
             // and different number of emotions checkedin
