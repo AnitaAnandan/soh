@@ -14,8 +14,13 @@ public class Student implements Comparable<Student>{
     public static int NUMBER_OF_WEEKS = 10;
 
     private String    edxid;
+
+    private double[] positiveEmodiversity = new double[NUMBER_OF_WEEKS];
+    private double[] negativeEmodiversity = new double[NUMBER_OF_WEEKS];
+    private double[] totalEmodiversity = new double[NUMBER_OF_WEEKS];
+
     private int[]     maxNumEmotionsCheckedInThisWeek = new int[NUMBER_OF_WEEKS];
-    private Checkin[] selectedCheckinThisWeek         = new Checkin[NUMBER_OF_WEEKS];
+    private Checkin[] selectedCheckin = new Checkin[NUMBER_OF_WEEKS];
     // TODO: Create arraylist of set of checkins etc.
     //private List<Set<Checkin>> checkins2 = new ArrayList<Set<Checkin>>();
     private TreeSet<Checkin> checkinsW01 = new TreeSet<>();
@@ -53,31 +58,103 @@ public class Student implements Comparable<Student>{
             getCheckinForThisWeek(week).add(checkin);
             if(checkin.getNumEmotionsCheckedin() > maxNumEmotionsCheckedInThisWeek[week]) {
                 maxNumEmotionsCheckedInThisWeek[week] = checkin.getNumEmotionsCheckedin();
-            }/*
-            if (selectedCheckinThisWeek[week] == null) {
-                selectedCheckinThisWeek[week] = checkin;
-            } else {
-                selectCheckin(week);
-            }*/
+            }
         }
     }
 
-    public Checkin selectCheckin(int week) {
+    public void selectCheckinAndCalculateEmoDiversity() {
+        for (int i = 0; i < NUMBER_OF_WEEKS; i++)
+            selectCheckinAndCalculateEmoDiversity(i);
+    }
+
+    private void selectCheckinAndCalculateEmoDiversity(int week) {
         Set<Checkin> checkins = getCheckinForThisWeek(week);
 
-        if (checkins == null || checkins.isEmpty()) return null; //return a 0 checkin instead
+        if (checkins == null || checkins.isEmpty()) return;
+        if (selectedCheckin != null && selectedCheckin[week] != null)
+            return;
+
         for (Checkin c : getCheckinForThisWeek(week)) {
-            //if (selectedCheckinThisWeek[week])
-            /*
-            if (selectedCheckinThisWeek[week].getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
-                selectedCheckinThisWeek[week] = c;
-            }*/
             if (c.getNumEmotionsCheckedin() == maxNumEmotionsCheckedInThisWeek[week]) {
-                selectedCheckinThisWeek[week] = c;
-                return selectedCheckinThisWeek[week];
+                selectedCheckin[week] = c;
+                calculateEmoDiversity(week);
+
+                return;
             }
         }
-        return null;//TODO: This line should never be executed. Fix.
+        return;//TODO: This line should never be executed. Fix.
+    }
+
+    // TODO Enforce: Should only be called when selection is completed
+    void calculateEmoDiversity(int week) {
+        if (selectedCheckin[week] == null) return;
+
+        int nScore = 0, pScore = 0, tScore = 0;
+        nScore += selectedCheckin[week].getEAnger()
+                + selectedCheckin[week].getEAnxiety()
+                + selectedCheckin[week].getESadness();
+        pScore += selectedCheckin[week].getEJoy()
+                + selectedCheckin[week].getEFriendliness()
+                + selectedCheckin[week].getECuriosity();
+        tScore += pScore + nScore;
+
+        double negativeEmodiversity;
+        double propAnger = getPropEmotion(selectedCheckin[week].getEAnger(), nScore);
+        double propAnxiety = getPropEmotion(selectedCheckin[week].getEAnxiety(), nScore);
+        double propSadness = getPropEmotion(selectedCheckin[week].getESadness(), nScore);
+        negativeEmodiversity = propAnger * java.lang.Math.log(propAnger)
+                + propAnxiety * java.lang.Math.log(propAnxiety)
+                + propSadness * java.lang.Math.log(propSadness);
+
+        double positiveEmodiversity;
+        double propJoy = getPropEmotion(selectedCheckin[week].getEJoy(), pScore);
+        double propFriendliness = getPropEmotion(selectedCheckin[week].getEFriendliness(), pScore);
+        double propCuriosity = getPropEmotion(selectedCheckin[week].getECuriosity(), pScore);
+        positiveEmodiversity = propJoy * java.lang.Math.log(propJoy)
+                + propFriendliness * java.lang.Math.log(propFriendliness)
+                + propCuriosity * java.lang.Math.log(propCuriosity);
+
+        double totalEmodiversity;
+        propAnger = getPropEmotion(selectedCheckin[week].getEAnger(), tScore);
+        propAnxiety = getPropEmotion(selectedCheckin[week].getEAnxiety(), tScore);
+        propSadness = getPropEmotion(selectedCheckin[week].getESadness(), tScore);
+        propJoy = getPropEmotion(selectedCheckin[week].getEJoy(), tScore);
+        propFriendliness = getPropEmotion(selectedCheckin[week].getEFriendliness(), tScore);
+        propCuriosity = getPropEmotion(selectedCheckin[week].getECuriosity(), tScore);
+        totalEmodiversity = propAnger * java.lang.Math.log(propAnger)
+                + propAnxiety * java.lang.Math.log(propAnxiety)
+                + propSadness * java.lang.Math.log(propSadness)
+                + propJoy * java.lang.Math.log(propJoy)
+                + propFriendliness * java.lang.Math.log(propFriendliness)
+                + propCuriosity * java.lang.Math.log(propCuriosity);
+
+        this.negativeEmodiversity[week] = negativeEmodiversity;
+        this.positiveEmodiversity[week] = positiveEmodiversity;
+        this.totalEmodiversity[week] = totalEmodiversity;
+
+    }
+
+    private long getPropEmotion(int emotion, int total) {
+        if (total == 0) // avoid divide by 0
+            return 0;
+        else
+            return emotion / total;
+    }
+
+    public double getPositiveEmodiversity(int week) {
+        return positiveEmodiversity[week];
+    }
+
+    public double getNegativeEmodiversity(int week) {
+        return negativeEmodiversity[week];
+    }
+
+    public double getTotalEmodiversity(int week) {
+        return totalEmodiversity[week];
+    }
+
+    public Checkin getSelectedCheckin(int week) {
+        return selectedCheckin[week];
     }
 
     @Override

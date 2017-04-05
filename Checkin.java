@@ -36,8 +36,38 @@ public class Checkin implements Comparable<Checkin>{
         return i;
     }
 
+    int getEAnger() {
+        if (getAnger() == 0) return 0;
+        else return getAnger() - 1;
+    }
+
+    int getEAnxiety() {
+        if (getAnxiety() == 0) return 0;
+        else return getAnxiety() - 1;
+    }
+
+    int getESadness() {
+        if (getSadness() == 0) return 0;
+        else return getSadness() - 1;
+    }
+
+    int getEJoy() {
+        if (getJoy() == 0) return 0;
+        else return getJoy() - 1;
+    }
+
+    int getEFriendliness() {
+        if (getFriendliness() == 0) return 0;
+        else return getFriendliness() - 1;
+    }
+
+    int getECuriosity() {
+        if (getCuriosity() == 0) return 0;
+        else return getCuriosity() - 1;
+    }
+
     public int getJoy() {
-        if(joy == null)
+        if (joy == null)
             return 0;
         else
             return joy.getScore();

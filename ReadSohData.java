@@ -32,8 +32,8 @@ public class ReadSohData {
     public static void main(String[] args) {
         registerStudents(true);
         checkinStudents(true);
-        //selectCheckin();
-        generateFile();
+        generateWideformat();
+        //generateLongFormat();
     }
 
     static void registerStudents(boolean forReals) {
@@ -233,20 +233,48 @@ public class ReadSohData {
                 }
             }
         }
+        Iterator i = registeredStudents.iterator();
+        while (i.hasNext())
+            ((Student) i.next()).selectCheckinAndCalculateEmoDiversity();
     }
 
-    /*
-    private static void selectCheckin() {
-        Iterator i = registeredStudents.iterator();
-        while (i.hasNext()) {
-            Student s = (Student) i.next();
-            for (int week = 1; week <= Student.NUMBER_OF_WEEKS; week++) {
-                s.selectCheckin(week);
+    private static void generateWideformat() {
+        String FILE_HEADER = "edxid,week,NE,PE,TE";
+        String FILE_NAME = "/Users/anitaa/Documents/Happiness/ScienceOfHappiness/data/emotions.csv";
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(FILE_NAME);
+            fileWriter.append(FILE_HEADER);
+
+            Iterator i = registeredStudents.iterator();
+            while (i.hasNext()) {
+                Student s = (Student) i.next();
+                for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
+                    if (s.getNegativeEmodiversity(week) != 0 || s.getPositiveEmodiversity(week) != 0) {
+                        fileWriter.append("\n"
+                                + s.getEdxid() + ","
+                                + (week + 1) + ","
+                                + s.getNegativeEmodiversity(week) + ","
+                                + s.getPositiveEmodiversity(week) + ","
+                                + s.getTotalEmodiversity(week));
+                    }
+                }
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (Throwable e2) {
+                e2.printStackTrace();
             }
         }
-    }*/
+    }
 
-    private static void generateFile() {
+    private static void generateLongFormat() {
         String FILE_HEADER = "edxid" + ","
                 + "w01_anger,w01_anxiety,w01_sadness,w01_joy,w01_friendliness,w01_curiosity" + ","
                 + "w02_anger,w02_anxiety,w02_sadness,w02_joy,w02_friendliness,w02_curiosity" + ","
@@ -274,7 +302,7 @@ public class ReadSohData {
                 Student s = (Student) i.next();
                 checkinForStudent = new Checkin[Student.NUMBER_OF_WEEKS];
                 for (int week = 0; week < Student.NUMBER_OF_WEEKS; week++) {
-                    checkinForStudent[week] = s.selectCheckin(week);
+                    checkinForStudent[week] = s.getSelectedCheckin(week);
                 }
                     /*
                     if (c == null) {
