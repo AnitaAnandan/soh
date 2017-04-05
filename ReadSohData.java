@@ -155,6 +155,16 @@ public class ReadSohData {
                     //System.out.println(checkinRow[0]);
                     //System.out.println(year + " " + " " + month + " " + day + " " + hour + " " + min);
 
+                    // TODO Code Review requested
+                    /*
+                    EMOTION VARIABLE NAMES
+                    71	Joy
+                    84	Sad
+                    85	Friendly
+                    86	Angry
+                    88	Fearful
+                    90	Interest
+                     */
                     anger = anxiety = sadness = joy = friendliness = curiosity = 0;
                     if (checkinRow[1] != null && Utilities.isInteger(checkinRow[1].trim()))
                         joy = Integer.parseInt(checkinRow[1]);
